@@ -38,6 +38,10 @@ public class Empleado {
     public Empleado() {
     }
 
+    public Empleado(String id) {
+        this.id = Long.parseLong(id);
+    }
+
     public Empleado(long id, String nombre, String apellido, String password, String email, String rol, List<Cita> citas) {
         this.id = id;
         this.nombre = nombre;

@@ -13,7 +13,7 @@ public class Cita {
     private long id;
 
     @Column(name = "fecha")
-    private Date fecha;
+    private String fecha;
 
     @Column(name = "hora")
     private String hora;
@@ -22,11 +22,11 @@ public class Cita {
     @JoinColumn(name = "id_empleado")
     private Empleado empleado;
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 
