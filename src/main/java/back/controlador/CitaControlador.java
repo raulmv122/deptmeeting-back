@@ -52,4 +52,25 @@ public class CitaControlador {
         }
     }
 
+    @PutMapping("/citas/{id}")
+    public ResponseEntity<?> actualizarCita(@PathVariable("id") String id, @RequestBody Cita cita) {
+        try {
+            Long idCasteado = Long.parseLong(id);
+            Optional<Cita> citaOptional = citaRepository.findById(idCasteado);
+            if (citaOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La cita no existe.");
+            }
+            Cita citaExistente = citaOptional.get();
+            citaExistente.setFecha(cita.getFecha());
+            citaExistente.setHora(cita.getHora());
+            citaExistente.setEmpleado(cita.getEmpleado());
+            Cita citaActualizada = citaRepository.save(citaExistente);
+            return ResponseEntity.ok(citaActualizada);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El ID de la cita no es válido.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error al actualizar la cita.");
+        }
+    }
+
 }
