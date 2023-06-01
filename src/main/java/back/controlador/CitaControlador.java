@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -46,11 +47,17 @@ public class CitaControlador {
     @GetMapping("/citas")
     public ResponseEntity<?> obtenerTodasLasCitas() {
         try {
-            return ResponseEntity.ok(citaRepository.findAll());
+            List<Cita> citas = citaRepository.findAll();
+            if (citas == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No se encontraron citas.");
+            }
+
+            return ResponseEntity.ok(citas);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error al obtener las citas.");
         }
     }
+
 
     @PutMapping("/citas/{id}")
     public ResponseEntity<?> actualizarCita(@PathVariable("id") String id, @RequestBody Cita cita) {
@@ -70,6 +77,23 @@ public class CitaControlador {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El ID de la cita no es válido.");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error al actualizar la cita.");
+        }
+    }
+
+    @GetMapping("/citas/{id}")
+    public ResponseEntity<?> obtenerCitaPorId(@PathVariable("id") String id) {
+        try {
+            Long idCasteado = Long.parseLong(id);
+            Optional<Cita> citaOptional = citaRepository.findById(idCasteado);
+            if (citaOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La cita no existe.");
+            }
+            Cita cita = citaOptional.get();
+            return ResponseEntity.ok(cita);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El ID de la cita no es válido.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error al obtener la cita.");
         }
     }
 
