@@ -97,4 +97,21 @@ public class CitaControlador {
         }
     }
 
+    @DeleteMapping("/citas/{id}")
+    public ResponseEntity<?> eliminarCita(@PathVariable("id") String id) {
+        try {
+            Long idCasteado = Long.parseLong(id);
+            Optional<Cita> citaOptional = citaRepository.findById(idCasteado);
+            if (citaOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La cita no existe.");
+            }
+            citaRepository.deleteById(idCasteado);
+            return ResponseEntity.ok("Cita eliminada.");
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El ID de la cita no es válido.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error al eliminar la cita.");
+        }
+    }
+
 }
