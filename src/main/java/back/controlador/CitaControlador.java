@@ -33,6 +33,15 @@ public class CitaControlador {
             if (empleadoOptional.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El empleado no existe.");
             }
+
+            List<Cita> citasDelEmpleado = citaRepository.findByEmpleado(empleadoOptional.get());
+            for (Cita citaExistente : citasDelEmpleado) {
+                if (citaExistente.getFecha().equals(cita.getFecha()) &&
+                        citaExistente.getHora().equals(cita.getHora())) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body("El empleado ya tiene una cita programada en esa fecha y hora.");
+                }
+            }
+
             cita.setEmpleado(empleadoOptional.get());
             Cita savedCita = citaRepository.save(cita);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedCita);
@@ -42,6 +51,9 @@ public class CitaControlador {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error al crear la cita.");
         }
     }
+
+
+
 
 
     @GetMapping("/citas")
@@ -68,9 +80,17 @@ public class CitaControlador {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La cita no existe.");
             }
             Cita citaExistente = citaOptional.get();
+
+            List<Cita> citasDelEmpleado = citaRepository.findByEmpleado(citaExistente.getEmpleado());
+            for (Cita citaExistenteEmpleado : citasDelEmpleado) {
+                if (citaExistente.getFecha().equals(cita.getFecha()) &&
+                        citaExistente.getHora().equals(cita.getHora())) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body("El empleado ya tiene una cita programada en esa fecha y hora.");
+                }
+            }
+
             citaExistente.setFecha(cita.getFecha());
             citaExistente.setHora(cita.getHora());
-            citaExistente.setEmpleado(cita.getEmpleado());
             Cita citaActualizada = citaRepository.save(citaExistente);
             return ResponseEntity.ok(citaActualizada);
         } catch (NumberFormatException e) {
@@ -79,6 +99,8 @@ public class CitaControlador {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error al actualizar la cita.");
         }
     }
+
+
 
     @GetMapping("/citas/{id}")
     public ResponseEntity<?> obtenerCitaPorId(@PathVariable("id") String id) {
@@ -113,5 +135,7 @@ public class CitaControlador {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error al eliminar la cita.");
         }
     }
+
+
 
 }
