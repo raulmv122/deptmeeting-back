@@ -18,6 +18,9 @@ public class Cita {
     @Column(name = "hora")
     private String hora;
 
+    @Column(name = "lugar")
+    private String lugar;
+
     @ManyToOne
     @JoinColumn(name = "id_empleado")
     private Empleado empleado;
@@ -48,6 +51,14 @@ public class Cita {
 
     public long getId() {
         return id;
+    }
+
+    public String getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
     }
 }
 
