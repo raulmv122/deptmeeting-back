@@ -21,9 +21,6 @@ public class Empleado {
     @Column(name = "apellido")
     private String apellido;
 
-    @Column(name = "password")
-    private String password;
-
     @Column(name = "email")
     private String email;
 
@@ -35,6 +32,9 @@ public class Empleado {
     private List<Cita> citas;
 
 
+    @Column(name = "loggeado")
+    private boolean loggeado;
+
     public Empleado() {
     }
 
@@ -42,15 +42,13 @@ public class Empleado {
         this.id = Long.parseLong(id);
     }
 
-    public Empleado(long id, String nombre, String apellido, String password, String email, String rol, List<Cita> citas) {
-        this.id = id;
+    public Empleado(String nombre, String apellido, String email, String rol) {
         this.nombre = nombre;
         this.apellido = apellido;
-        this.password = password;
         this.email = email;
         this.rol = rol;
-        this.citas = citas;
     }
+
 
     public long getId() {
         return id;
@@ -76,14 +74,6 @@ public class Empleado {
         this.apellido = apellido;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -107,4 +97,13 @@ public class Empleado {
     public void setCitas(List<Cita> citas) {
         this.citas = citas;
     }
+
+    public boolean isLoggeado() {
+        return loggeado;
+    }
+
+    public void setLoggeado(boolean loggeado) {
+        this.loggeado = loggeado;
+    }
+
 }

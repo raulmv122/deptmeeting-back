@@ -33,21 +33,17 @@ public class EmpeladoControlador {
     public ResponseEntity<Empleado> actualizarEmpleado(@PathVariable Long id, @RequestBody Empleado empleado) {
         Empleado empleadoActual = repositorio.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe el empleado con el id: " + id));
+
         empleadoActual.setNombre(empleado.getNombre());
         empleadoActual.setApellido(empleado.getApellido());
         empleadoActual.setEmail(empleado.getEmail());
-        empleadoActual.setPassword(empleado.getPassword());
         empleadoActual.setRol(empleado.getRol());
-        if (empleado.getCitas() != null) {
-            if (empleadoActual.getCitas() == null) {
-                empleadoActual.setCitas(new ArrayList<>());
-            }
-            empleadoActual.getCitas().clear();
-            empleadoActual.getCitas().addAll(empleado.getCitas());
-        }
+        empleadoActual.setLoggeado(empleado.isLoggeado());
+
         Empleado empleadoActualizado = repositorio.save(empleadoActual);
         return ResponseEntity.ok(empleadoActualizado);
     }
+
 
     @DeleteMapping("/empleados/{id}")
     public ResponseEntity<Empleado> borrarEmpleado(@PathVariable Long id){
