@@ -58,5 +58,30 @@ public class EmpeladoControlador {
         return ResponseEntity.ok(empleadoNuevo);
     }
 
+    @GetMapping("/empleados/administrador/loggeado")
+    public ResponseEntity<Boolean> hayAdministradorLoggeado(){
+        List<Empleado> empleados = repositorio.findAll();
+        for (Empleado empleado : empleados) {
+            if(empleado.getRol().equals("administrador") && empleado.isLoggeado()){
+                System.out.println("Hay un administradores loggeados");
+
+                return ResponseEntity.ok(true);
+            }
+        }
+        System.out.println("No hay un administrador loggeado");
+        return ResponseEntity.ok(false);
+
+    }
+
+
+    @GetMapping("/empleados/desloggeado")
+    public ResponseEntity<List<Empleado>> loggeadoFalse(){
+        List<Empleado> empleados = repositorio.findAll();
+        for (Empleado empleado : empleados) {
+            empleado.setLoggeado(false);
+            repositorio.save(empleado);
+        }
+        return ResponseEntity.ok(empleados);
+    }
 
 }
